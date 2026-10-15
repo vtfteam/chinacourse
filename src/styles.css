@@ -108,6 +108,8 @@ a { color: inherit; }
 h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; text-wrap: balance; margin: 0; }
 p { margin: 0; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+#view:focus, #view:focus-visible { outline: none; }
+[hidden] { display: none !important; }
 .hz, .zh { font-family: var(--font-han); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -174,6 +176,8 @@ p { margin: 0; }
 
 @media (max-width: 760px) {
   :root { --nav-h: calc(60px + env(safe-area-inset-bottom, 0px)); }
+  /* backdrop-filter by ze spodní navigace udělal součást horní lišty */
+  .topbar { backdrop-filter: none; background: var(--paper); }
   .brand-name { font-size: var(--fs-m); }
   .topbar-in { justify-content: space-between; }
   .mainnav {
@@ -676,7 +680,8 @@ kbd { font-family: var(--font-body); font-size: 11px; padding: 1px 5px; border: 
 .tone-card { display: flex; flex-direction: column; gap: 6px; padding: 14px; background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--radius); min-width: 0; }
 .tone-card .mark { font-size: var(--fs-2xl); font-weight: 700; line-height: 1; }
 .tone-card .desc { font-size: var(--fs-s); color: var(--ink-soft); }
-.tone-card .ex { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+.tone-card .ex { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: auto; }
+.tone-card .ex .muted { font-size: var(--fs-s); }
 .tone-card .ex .zh { font-size: var(--fs-xl); }
 .contour { width: 64px; height: 44px; }
 .contour line.lvl { stroke: var(--rule); stroke-width: 1; }

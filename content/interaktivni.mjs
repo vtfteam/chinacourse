@@ -25,7 +25,7 @@ export const lessons = {
 // Pinyin pro kartičky, které nejsou ve slovníčku lekcí.
 export const extraPinyin = {
   一: 'yī', 二: 'èr', 三: 'sān', 四: 'sì', 五: 'wǔ', 六: 'liù', 七: 'qī', 八: 'bā', 九: 'jiǔ', 十: 'shí',
-  王明: 'Wáng Míng', 我们: 'wǒmen', 没: 'méi', 太: 'tài', 了: 'le', 试试: 'shìshi', 日: 'rì', 天: 'tiān',
+  王明: 'Wáng Míng', 我们: 'wǒmen', 他: 'tā', 她: 'tā', 看: 'kàn', 电影: 'diànyǐng', 没: 'méi', 太: 'tài', 了: 'le', 试试: 'shìshi', 日: 'rì', 天: 'tiān',
   星期一: 'xīngqīyī', 星期三: 'xīngqīsān', 星期四: 'xīngqīsì', 星期六: 'xīngqīliù', 星期天: 'xīngqītiān',
   喝咖啡: 'hē kāfēi', 明天上午: 'míngtiān shàngwǔ', 今天晚上: 'jīntiān wǎnshang',
   明天晚上: 'míngtiān wǎnshang', 跟朋友一起: 'gēn péngyou yìqǐ',

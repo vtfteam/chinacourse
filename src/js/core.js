@@ -38,6 +38,11 @@ function h(tag, attrs, ...children) {
   return el;
 }
 const $ = (sel, root = document) => root.querySelector(sel);
+// Jako el.append(), ale přeskočí null a false.
+function appendAll(el, ...kids) {
+  for (const c of kids.flat(Infinity)) if (c != null && c !== false) el.append(c);
+  return el;
+}
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
 const ICONS = {
