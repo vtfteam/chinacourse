@@ -189,8 +189,8 @@ function explainPanel(ex) {
     return h(sayable ? 'button' : 'span', {
       class: `word${w.isNew ? ' is-new' : ''}`,
       type: sayable ? 'button' : null,
-      title: sayable ? 'Přehrát' : null,
-      onclick: sayable ? () => Speech.speak(w.zh) : null,
+      title: sayable ? 'Detail slova' : null,
+      onclick: sayable ? () => WordSheet.open(w) : null,
     },
     w.isNew ? h('span', { class: 'badge-new' }, 'nové') : null,
     h('span', { class: 'zh' }, w.zh),
@@ -204,31 +204,44 @@ function explainPanel(ex) {
 }
 
 // ---------- Slovíčka ----------
+// Řádek slovíčka. open: klepnutí otevře detail slova; vpravo přehrání a „Umím“.
 function vocabRow(v, opts = {}) {
   const cz = h('span', { class: 'cz', html: v.czHtml || escapeHtml(v.cz) });
-  cz.addEventListener('click', () => cz.classList.toggle('peek'));
-  return h('div', { class: 'vrow' },
-    h('span', { class: 'zh hz-say', 'data-say': v.zh }, v.zh),
+  cz.addEventListener('click', (e) => {
+    if (cz.closest('.hide-meaning')) { e.stopPropagation(); cz.classList.toggle('peek'); }
+  });
+  const row = h('div', { class: `vrow${opts.open ? ' vrow-open' : ''}` },
+    h('span', { class: 'zh' }, v.zh),
     pyEl(v.py),
     h('span', null, cz, opts.tag ? h('a', { class: 'tag', href: `#l${v.l}-slovicka`, style: 'margin-left:8px' }, `L${v.l}`) : null),
-    sayBtn(v.zh));
+    h('span', { class: 'vrow-actions' },
+      sayBtn(v.zh),
+      v.l ? knownBtn('w', cardKey(v), { word: v, label: v.zh, compact: true, onChange: opts.onKnownChange }) : null));
+  if (opts.open) {
+    row.setAttribute('role', 'button');
+    row.setAttribute('tabindex', '0');
+    row.setAttribute('aria-label', `${v.zh} ${v.py}: ${v.cz}. Otevřít detail slova`);
+    const open = () => WordSheet.open(v);
+    row.addEventListener('click', (e) => { if (!e.target.closest('button, a')) open(); });
+    row.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target === row) { e.preventDefault(); open(); } });
+  }
+  return row;
 }
 
 function renderVocab(lesson) {
   const s = lesson.steps.vocab;
-  const list = h('div', { class: 'vocab sheet', style: 'padding-block:4px' }, s.entries.map((v) => vocabRow(v)));
+  const words = COURSE.vocab.filter((v) => v.l === lesson.n);
+  const list = h('div', { class: 'vocab sheet', style: 'padding-block:4px' }, words.map((v) => vocabRow(v, { open: true })));
   const hide = h('label', { class: 'toggle', for: 'vocab-hide' },
     h('input', { type: 'checkbox', id: 'vocab-hide', onchange: (e) => list.classList.toggle('hide-meaning', e.target.checked) }),
     'Zakrýt význam (klepnutím ho odkryješ)');
   const extras = (arr) => arr.map((x) => h('section', { class: 'stack' }, h('h3', { class: 'section-title' }, x.title), renderBlocks(x.blocks)));
-  const words = COURSE.vocab.filter((v) => v.l === lesson.n);
   const newChars = h('section', { class: 'sheet stack' },
     h('div', { class: 'row', style: 'justify-content:space-between' },
       h('h2', null, 'Nové znaky v této lekci'),
       h('span', { class: 'muted' }, plural(lesson.newChars.length, 'znak', 'znaky', 'znaků'))),
-    h('p', { class: 'muted', style: 'font-size:var(--fs-s)' }, 'Tyhle znaky se v kurzu objevují poprvé. Klepni na znak a uvidíš, jak se píše.'),
-    h('div', { class: 'practice-chars' }, lesson.newChars.map((c, i) =>
-      h('button', { class: 'tzg', type: 'button', 'aria-label': `Znak ${c}`, onclick: () => Writer.open(lesson.newChars, i) }, c))));
+    h('p', { class: 'muted', style: 'font-size:var(--fs-s)' }, 'Tyhle znaky se v kurzu objevují poprvé. Klepni na znak a uvidíš, z čeho se skládá a jak vznikl. Klepnutím na slovo otevřeš jeho znaky.'),
+    h('div', { class: 'practice-chars' }, lesson.newChars.map((c) => charCell(c))));
   return h('div', { class: 'stack-l' },
     newChars,
     extras(s.before),
@@ -308,7 +321,7 @@ function renderChars(lesson) {
   const head = h('div', { class: 'stack' }, stepTitle(`Znaky: ${c.title}`));
   if (c.items.length) {
     head.append(h('div', { class: 'char-grid' }, c.items.map((it) => {
-      const cell = h('button', { class: 'tzg', type: 'button', 'aria-label': `Tahy znaku ${it.zh}`, onclick: () => Writer.open(c.practice, c.practice.indexOf(it.zh)) }, it.zh);
+      const cell = charCell(it.zh, 84);
       return h('article', { class: 'char-card' },
         cell,
         h('div', { style: 'min-width:0' },
@@ -316,11 +329,16 @@ function renderChars(lesson) {
           makeSayable(h('div', { class: 'parts', html: it.parts })),
           makeSayable(h('div', { class: 'memo', html: it.memo })),
           h('div', { class: 'row' }, sayBtn(it.zh, { small: true }),
-            h('button', { class: 'btn btn-small', type: 'button', onclick: () => Writer.open(c.practice, c.practice.indexOf(it.zh)) }, 'Tahy a psaní'))));
+            CHARS[it.zh] ? h('a', { class: 'btn btn-small', href: charHash(it.zh) }, 'Jak vznikl') : null,
+            h('button', { class: 'btn btn-small', type: 'button', onclick: () => Writer.open(c.practice, c.practice.indexOf(it.zh)) }, 'Tahy'))));
     })));
   }
   if (c.blocks.length) appendAll(head, renderBlocks(c.blocks, { class: c.items.length ? 'prose callout' : 'prose' }));
   wrap.append(head);
+  wrap.append(h('section', { class: 'stack' },
+    h('h2', { class: 'section-title' }, 'Všechny nové znaky lekce'),
+    h('p', { class: 'muted' }, 'U každého znaku najdeš, z jakých dílů se skládá, jakou roli díly hrají (význam, nebo zvuk) a jak znak vznikl.'),
+    h('div', { class: 'char-grid-tiles' }, lesson.newChars.map(charTile))));
   const practice = c.practice.filter((ch) => STROKES[ch]);
   if (practice.length) {
     wrap.append(h('section', { class: 'sheet stack' },

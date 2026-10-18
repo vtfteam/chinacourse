@@ -15,6 +15,7 @@ function route() {
   const main = $('#view');
   runLeave();
   Speech.stop();
+  $$('dialog[open]').forEach((d) => d.close());
 
   let view;
   let nav = hash;
@@ -22,6 +23,12 @@ function route() {
   if ((m = /^l(\d+)(?:-([a-z]+))?$/.exec(hash))) {
     view = LessonView(Number(m[1]), m[2]);
     nav = 'domu';
+  } else if ((m = /^slovnik(?:-(znaky|moje))?$/.exec(hash))) {
+    view = DictionaryView(m[1] || 'slova');
+    nav = 'slovnik';
+  } else if ((m = /^znak-([0-9a-f]+)$/.exec(hash))) {
+    view = CharView(m[1]);
+    nav = 'slovnik';
   } else if ((m = /^karticky-l(\d+)$/.exec(hash))) {
     view = CardsView(Number(m[1]));
     nav = 'karticky';
@@ -53,7 +60,7 @@ function boot() {
   Speech.init();
   $('#settings-open').addEventListener('click', () => SettingsPanel.open());
   $('#writer').addEventListener('close', () => { if (Writer.writer && Writer.writer.cancelQuiz) Writer.writer.cancelQuiz(); });
-  for (const id of ['settings', 'writer']) {
+  for (const id of ['settings', 'writer', 'word']) {
     const dlg = document.getElementById(id);
     dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
   }

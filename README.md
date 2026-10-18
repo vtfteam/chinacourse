@@ -9,6 +9,12 @@ Aplikace je jeden HTML soubor, [`docs/index.html`](docs/index.html). Funguje v p
 - **Lekce v sedmi krocích**, stejně jako v učebnici: dialog, slovíčka, gramatika, znaky, výslovnost, mluvení a cvičení. U každé lekce je vidět, kolik kroků máš hotových.
 - **Výslovnost**: každou čínskou větu si přehraješ klepnutím, přes hlas prohlížeče (Web Speech API).
 - **Dialog jako scénka**: vybereš si roli, aplikace řekne repliky druhých a ty odpovídáš.
+- **Rozbor věty** u každé repliky: slova s pinyinem a významem, doslovný překlad a vysvětlení, jak je věta postavená. Slova z dané lekce mají štítek „nové“.
+- **Etymologie znaků**: u každého z 227 znaků kurzu a u 43 základních dílů je vidět:
+  - z čeho se skládá a jakou roli každý díl hraje (význam, nebo zvuk);
+  - typ znaku (obrázek, ukazatel, spojení významů, význam + zvuk, výpůjčka, zjednodušený);
+  - jak znak vznikl a jeho tradiční podoba.
+- **Můj slovník**: slova a znaky, které umíš. Přidáš je tlačítkem „Umím“; slova z kartiček ve 3. krabičce a výš se přidají sama.
 - **Cvičení s okamžitou kontrolou**: skládání vět z kartiček, doplňování, hledání radikálů a třídění znaků. Kontroluje se podle klíče z učebnice a uzná i jiná správná řešení, třeba 很高兴认识你 vedle 认识你很高兴.
 - **Kartičky** se všemi 179 slovíčky a opakováním s rozestupy (Leitnerův systém): znak → význam, význam → znak, nebo poslech.
 - **Trenažér tónů**: poslechneš si slovo a vybíráš pinyin se správnými tóny.
@@ -38,6 +44,8 @@ Zdrojem textu je učebnice v Markdownu. Aplikace se z ní generuje:
 | --- | --- |
 | `content/ucebnice.md` | Text učebnice: lekce, dialogy, slovíčka, gramatika, přílohy |
 | `content/interaktivni.mjs` | Interaktivní cvičení, klíčová slova lekcí a pinyin ke kartičkám |
+| `content/rozbor.mjs` | Rozbor každé věty z dialogů (klíčem je text repliky) |
+| `content/znaky.mjs` | Etymologie znaků: díly, typ, příběh a tradiční podoba |
 | `src/` | Vzhled a logika aplikace (HTML, CSS, JavaScript bez frameworku) |
 | `tools/` | Převod Markdownu na data, sestavení a kontrola |
 
@@ -45,7 +53,7 @@ Po úpravě spusť:
 
 ```sh
 npm install      # jen poprvé: stáhne data o tazích znaků
-npm run check    # zkontroluje lekce a jestli jdou odpovědi složit z kartiček
+npm run check    # zkontroluje lekce, odpovědi cvičení, rozbor vět a pokrytí znaků etymologií
 npm run build    # vytvoří docs/index.html
 ```
 

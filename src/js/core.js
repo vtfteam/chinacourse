@@ -70,7 +70,7 @@ function saveJSON(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* soukromé okno apod. */ }
 }
 
-const emptyProgress = () => ({ epoch: 0, t: 0, steps: {}, ex: {}, cards: {}, notes: {}, last: null });
+const emptyProgress = () => ({ epoch: 0, t: 0, steps: {}, ex: {}, cards: {}, notes: {}, known: { w: {}, c: {} }, last: null });
 let progress = normalizeProgress(loadJSON(STORE_KEY, null));
 const settings = Object.assign({ pinyin: true, tones: true, rate: 0.85, voice: '' }, loadJSON(SETTINGS_KEY, {}));
 
@@ -78,6 +78,7 @@ function normalizeProgress(p) {
   const base = emptyProgress();
   if (!p || typeof p !== 'object') return base;
   for (const k of Object.keys(base)) if (p[k] != null) base[k] = p[k];
+  base.known = { w: Object.assign({}, p.known && p.known.w), c: Object.assign({}, p.known && p.known.c) };
   return base;
 }
 
@@ -96,6 +97,11 @@ function mergeProgress(a, b) {
   }
   for (const k of new Set([...Object.keys(a.cards), ...Object.keys(b.cards)])) out.cards[k] = pickNewer(a.cards[k], b.cards[k]);
   for (const k of new Set([...Object.keys(a.notes), ...Object.keys(b.notes)])) out.notes[k] = pickNewer(a.notes[k], b.notes[k]);
+  for (const kind of ['w', 'c']) {
+    const x = (a.known && a.known[kind]) || {};
+    const y = (b.known && b.known[kind]) || {};
+    for (const k of new Set([...Object.keys(x), ...Object.keys(y)])) out.known[kind][k] = pickNewer(x[k], y[k]);
+  }
   out.last = (a.t || 0) >= (b.t || 0) ? a.last || b.last : b.last || a.last;
   return out;
 }
@@ -131,6 +137,23 @@ function lessonDone(n) {
 function setLast(n, step) {
   progress.last = { n, step };
   saveJSON(STORE_KEY, progress);
+}
+
+// ---------- Moje slova a znaky ----------
+// Slovo umíš, když ho tak označíš, nebo když je v kartičkách aspoň v 3. krabičce.
+// Ruční odebrání má přednost před kartičkami.
+const cardKey = (v) => `${v.zh}|${v.py}`;
+const knownMark = (kind, key) => progress.known[kind][key];
+function isKnownWord(v) {
+  const m = knownMark('w', cardKey(v));
+  if (m) return m.k;
+  const card = progress.cards[cardKey(v)];
+  return !!(card && card.box >= 3);
+}
+const isKnownChar = (ch) => !!(knownMark('c', ch) && knownMark('c', ch).k);
+function setKnown(kind, key, on) {
+  progress.known[kind][key] = { k: !!on, t: Date.now() };
+  commit();
 }
 
 // ---------- Různé ----------
