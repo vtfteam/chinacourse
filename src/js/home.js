@@ -25,15 +25,19 @@ function shortGoal(lesson) {
 
 function vocabStats() {
   const now = today();
-  let learned = 0;
   let due = 0;
   for (const v of COURSE.vocab) {
-    const c = progress.cards[`${v.zh}|${v.py}`];
-    if (!c) continue;
-    if (c.box >= 3) learned++;
-    if (c.due <= now) due++;
+    const c = progress.cards[cardKey(v)];
+    if (c && c.due <= now) due++;
   }
-  return { learned, due, total: COURSE.vocab.length };
+  const chars = CHAR_ORDER.filter((c) => !CHARS[c].dil);
+  return {
+    learned: COURSE.vocab.filter(isKnownWord).length,
+    due,
+    total: COURSE.vocab.length,
+    chars: chars.filter(isKnownChar).length,
+    charsTotal: chars.length,
+  };
 }
 
 function HomeView() {
@@ -61,7 +65,8 @@ function HomeView() {
       h('div', { class: 'row' }, cta, h('a', { class: 'btn', href: '#uvod' }, 'Jak učebnice funguje')),
       h('div', { class: 'statline' },
         h('span', null, 'Hotové kroky ', h('b', null, `${stepsDone} / ${LESSONS.length * STEPS.length}`)),
-        h('span', null, 'Slovíčka, která umíš ', h('b', null, `${stats.learned} / ${stats.total}`)),
+        h('a', { href: '#slovnik-moje', style: 'text-decoration:none' }, 'Slova, která umíš ', h('b', null, `${stats.learned} / ${stats.total}`)),
+        h('a', { href: '#slovnik-moje', style: 'text-decoration:none' }, 'Znaky, které umíš ', h('b', null, `${stats.chars} / ${stats.charsTotal}`)),
         h('span', null, 'K opakování dnes ', h('b', null, String(stats.due))))),
     heroArt);
 
@@ -91,7 +96,7 @@ function HomeView() {
     h('a', { class: 'tool-link', href: '#karticky' }, h('span', { class: 'hz' }, '卡片'), h('b', null, 'Kartičky'),
       h('span', null, stats.due ? `${plural(stats.due, 'slovíčko', 'slovíčka', 'slovíček')} k opakování` : 'Opakování s rozestupy')),
     h('a', { class: 'tool-link', href: '#tony' }, h('span', { class: 'hz' }, '声调'), h('b', null, 'Tóny'), h('span', null, 'Trénuj sluch na čtyři tóny')),
-    h('a', { class: 'tool-link', href: '#slovnik' }, h('span', { class: 'hz' }, '词典'), h('b', null, 'Slovník'), h('span', null, `${stats.total} slov z kurzu`)),
+    h('a', { class: 'tool-link', href: '#slovnik' }, h('span', { class: 'hz' }, '词典'), h('b', null, 'Slovník'), h('span', null, `${stats.total} slov, ${stats.charsTotal} znaků a jak vznikly`)),
     h('a', { class: 'tool-link', href: '#prirucka' }, h('span', { class: 'hz' }, '语法'), h('b', null, 'Příručka'), h('span', null, 'Gramatika, radikály, klíč')));
 
   return h('div', { class: 'stack-l' },

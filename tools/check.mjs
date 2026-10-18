@@ -3,6 +3,7 @@
 
 import { assembleCourse, strokeData } from './build.mjs';
 import rozbor from '../content/rozbor.mjs';
+import znaky from '../content/znaky.mjs';
 
 const course = assembleCourse();
 const problems = [];
@@ -71,11 +72,28 @@ function canBuild(target, tiles, reuse, used = new Set()) {
 
 for (const key of Object.keys(rozbor)) if (!usedRozbor.has(key)) warn.push(`Rozbor „${key}“ nepatří k žádné replice`);
 
+// Znaky: každý znak ze slovníčků musí mít etymologii.
+const TYPES = ['obrázek', 'ukazatel', 'spojení', 'zvuk', 'výpůjčka', 'zjednodušený'];
+const ROLES = ['význam', 'zvuk', 'tvar'];
+const vocabChars = new Set(course.vocab.flatMap((v) => [...han(v.zh)]));
+for (const c of vocabChars) if (!znaky[c]) problems.push(`Znak ${c} nemá položku v content/znaky.mjs`);
+for (const [c, z] of Object.entries(znaky)) {
+  if (!TYPES.includes(z.typ)) problems.push(`Znak ${c}: neznámý typ „${z.typ}“`);
+  if (!z.py || !z.cz) problems.push(`Znak ${c}: chybí pinyin nebo význam`);
+  if (!z.pribeh) warn.push(`Znak ${c}: chybí příběh`);
+  if (!Array.isArray(z.dily)) problems.push(`Znak ${c}: dily musí být pole`);
+  for (const d of z.dily || []) {
+    const [part, role, cz] = d.split('|');
+    if (!part || !cz || !ROLES.includes(role)) problems.push(`Znak ${c}: špatně zapsaný díl „${d}“`);
+  }
+  if (!vocabChars.has(c) && !z.l) problems.push(`Znak ${c} není ve slovníčku, potřebuje lekci „l“`);
+}
+
 const strokes = strokeData(course);
 const missing = [...new Set(course.vocab.flatMap((v) => [...han(v.zh)]))].filter((c) => !strokes[c]);
 if (missing.length) warn.push(`Znaky bez dat o tazích: ${missing.join(' ')}`);
 
-console.log(`${course.lessons.length} lekcí, ${course.vocab.length} slovíček, ${Object.keys(strokes).length} znaků s tahy`);
+console.log(`${course.lessons.length} lekcí, ${course.vocab.length} slovíček, ${Object.keys(course.chars).length} znaků s etymologií, ${Object.keys(strokes).length} znaků s tahy`);
 for (const w of warn) console.log(`upozornění: ${w}`);
 for (const p of problems) console.log(`CHYBA: ${p}`);
 if (problems.length) process.exit(1);

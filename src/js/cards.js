@@ -1,7 +1,6 @@
 // Kartičky se slovíčky a opakováním s rozestupy (Leitnerovy krabičky).
 
 const INTERVALS = [0, 1, 3, 7, 14, 30];
-const cardKey = (v) => `${v.zh}|${v.py}`;
 const MODES = [
   { key: 'zh', label: 'Znak → význam' },
   { key: 'cz', label: 'Význam → znak' },
@@ -130,7 +129,11 @@ function CardsView(preset) {
       const hanzi = [...v.zh].filter((c) => /\p{Script=Han}/u.test(c));
       const big = hanzi.length <= 4 && !/[…/]/.test(v.zh) ? tzgRow(v.zh, hanzi.length > 2 ? 80 : 104) : h('span', { class: 'zh', style: 'font-size:2.5rem' }, v.zh);
       const corner = h('span', { class: 'corner' }, `Lekce ${v.l}`);
-      const back = [h('div', { class: 'row', style: 'justify-content:center' }, pyEl(v.py), sayBtn(v.zh, { small: true })), h('div', { class: 'cz' }, v.cz)];
+      const back = [
+        h('div', { class: 'row', style: 'justify-content:center' }, pyEl(v.py), sayBtn(v.zh, { small: true }), knownBtn('w', cardKey(v), { word: v, label: v.zh, compact: true })),
+        h('div', { class: 'cz' }, v.cz),
+        h('div', { class: 'row', style: 'justify-content:center;gap:4px' }, [...new Set(onlyHan(v.zh))].filter((c) => CHARS[c]).map((c) =>
+          h('a', { class: 'btn btn-small', href: charHash(c), onclick: (e) => e.stopPropagation() }, h('span', { class: 'zh' }, c), ' jak vznikl')))];
       if (cfg.mode === 'zh') return [corner, big, ...(flipped ? back : [h('p', { class: 'hint' }, 'Co to znamená? Klepni pro otočení.')])];
       if (cfg.mode === 'cz') {
         return [corner, h('div', { class: 'big-cz' }, v.cz),

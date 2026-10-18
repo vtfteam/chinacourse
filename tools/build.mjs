@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { buildCourse, splitVocab } from './parse-md.mjs';
 import { lessons as lessonMeta, exercises, extraPinyin } from '../content/interaktivni.mjs';
 import rozbor from '../content/rozbor.mjs';
+import znaky from '../content/znaky.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(root, p), 'utf8');
@@ -27,6 +28,7 @@ const JS_FILES = [
   'src/js/exercises.js',
   'src/js/cards.js',
   'src/js/tones.js',
+  'src/js/characters.js',
   'src/js/dictionary.js',
   'src/js/reference.js',
   'src/js/main.js',
@@ -82,12 +84,34 @@ export function assembleCourse() {
   }
   course.vocab = vocab;
   course.pinyin = pinyin;
+
+  // Znaky s etymologií: lekce prvního výskytu a rozložené díly.
+  const firstLesson = {};
+  for (const lesson of course.lessons) for (const c of lesson.newChars) firstLesson[c] ??= lesson.n;
+  course.chars = {};
+  for (const [c, z] of Object.entries(znaky)) {
+    course.chars[c] = {
+      py: z.py,
+      cz: z.cz,
+      typ: z.typ,
+      dil: !!z.dil,
+      first: firstLesson[c] || z.l || null,
+      trad: z.trad || null,
+      dily: z.dily.map((d) => {
+        const [part, role, cz] = d.split('|');
+        return { c: part, role, cz };
+      }),
+      pribeh: z.pribeh,
+    };
+  }
   return course;
 }
 
 // Data pro animace tahů (hanzi-writer-data) jen pro znaky z učebnice.
 export function strokeData(course) {
-  const chars = new Set(JSON.stringify(course).match(/\p{Script=Han}/gu));
+  // Tahy pro znaky z textu učebnice a pro všechny znaky a díly s etymologií.
+  const { chars: etymology, ...rest } = course;
+  const chars = new Set([...JSON.stringify(rest).match(/\p{Script=Han}/gu), ...Object.keys(etymology || {})]);
   const data = {};
   for (const c of [...chars].sort()) {
     const file = join(root, 'node_modules/hanzi-writer-data', `${c}.json`);
