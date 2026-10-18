@@ -22,7 +22,7 @@ Pokrok se ukládá v prohlížeči. Když aplikace běží jako artefakt na clau
 ## Jak to spustit
 
 - **Lokálně**: otevři `docs/index.html` v prohlížeči.
-- **Na webu (GitHub Pages)**: v nastavení repozitáře otevři *Settings → Pages*. Jako zdroj vyber *Deploy from a branch*, větev `main` a složku `/docs`.
+- **Na webu**: https://vtfteam.github.io/chinacourse/ (GitHub Pages, zdroj *Deploy from a branch*, větev `main`, složka `/docs`). GitHub Pages zdarma fungují jen pro veřejné repozitáře.
 
 Na výslovnost potřebuje zařízení čínský hlas:
 
@@ -58,5 +58,5 @@ Nová lekce se v aplikaci objeví sama. Její interaktivní cvičení se doplní
 
 ## Licence a zdroje
 
-- Data o tazích znaků pocházejí z balíčku [hanzi-writer-data](https://github.com/chanind/hanzi-writer-data) (Arphic Public License, odvozeno z projektu Make Me a Hanzi).
+- Data o tazích znaků, vložená do `docs/index.html`, pocházejí z balíčku [hanzi-writer-data](https://github.com/chanind/hanzi-writer-data). Jsou odvozená z projektu Make Me a Hanzi a šíří se pod licencí Arphic Public License, jejíž text je v [`LICENSES/ARPHICPL.TXT`](LICENSES/ARPHICPL.TXT).
 - Knihovna [Hanzi Writer](https://hanziwriter.org) je pod licencí MIT.
