@@ -63,7 +63,7 @@ const stepTitle = (title, ...extra) => h('div', { class: 'step-title' }, h('h2',
 function renderDialog(lesson) {
   const d = lesson.steps.dialog;
   const roles = d.roles;
-  const state = { role: null, playing: 0 };
+  const state = { role: null, playing: 0, explainAll: false };
   const wrap = h('div', { class: 'stack' });
   const list = h('div', { class: 'dialog' });
   const pitch = (who) => [1, 0.82, 1.18][Math.max(0, roles.indexOf(who))] || 1;
@@ -77,10 +77,11 @@ function renderDialog(lesson) {
       const mine = state.role === ln.who;
       const el = h('div', { class: `line${mine ? ' mine' : ''}`, 'data-i': i },
         h('div', { class: 'who', 'data-r': roles.indexOf(ln.who) }, ln.who));
-      const text = h('div', null,
+      const text = h('div', { style: 'min-width:0' },
         h('div', { class: 'zh' }, ln.zh),
-        pyEl(ln.py),
-        h('div', { class: 'cz', html: ln.cz }));
+        pyEl(ln.py, 'line-py'),
+        h('div', { class: 'cz line-cz', html: ln.cz }),
+        ln.ex ? explainToggle(ln.ex, state.explainAll) : null);
       if (mine) {
         const reveal = h('button', { class: 'btn btn-small', type: 'button' }, 'Řekl(a) jsem to, ukaž správně');
         const prompt = h('div', { class: 'mine-prompt' }, h('span', { class: 'eyebrow' }, 'Tvoje replika'), h('div', { class: 'cz', html: ln.cz }), reveal);
@@ -137,6 +138,13 @@ function renderDialog(lesson) {
   const playBtn = h('button', { class: 'btn btn-ink', type: 'button', onclick: playAll }, 'Přehrát celý dialog');
   const pyToggle = h('label', { class: 'toggle', for: 'dlg-py' }, h('input', { type: 'checkbox', id: 'dlg-py', checked: true, onchange: (e) => wrap.classList.toggle('hide-py', !e.target.checked) }), 'Pinyin');
   const czToggle = h('label', { class: 'toggle', for: 'dlg-cz' }, h('input', { type: 'checkbox', id: 'dlg-cz', checked: true, onchange: (e) => wrap.classList.toggle('hide-cz', !e.target.checked) }), 'Překlad');
+  const explainAllToggle = h('label', { class: 'toggle', for: 'dlg-explain' }, h('input', {
+    type: 'checkbox', id: 'dlg-explain',
+    onchange: (e) => {
+      state.explainAll = e.target.checked;
+      $$('.explain-btn', list).forEach((b) => { if ((b.getAttribute('aria-expanded') === 'true') !== state.explainAll) b.click(); });
+    },
+  }), 'Rozbor u všech vět');
   const roleSeg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Hraj roli' },
     [null, ...roles].map((r) => h('button', {
       type: 'button',
@@ -154,12 +162,45 @@ function renderDialog(lesson) {
   appendAll(wrap,
     stepTitle(`Dialog: ${d.title}`),
     d.intro.length ? renderBlocks(d.intro) : null,
-    h('div', { class: 'toolbar' }, playBtn, pyToggle, czToggle),
+    h('div', { class: 'toolbar' }, playBtn, pyToggle, czToggle, explainAllToggle),
     h('div', { class: 'toolbar' }, h('span', { class: 'muted', style: 'font-size:var(--fs-s)' }, 'Scénka:'), roleSeg),
     list,
     d.notes.length ? renderBlocks(d.notes) : null,
-    h('p', { class: 'muted', style: 'font-size:var(--fs-s)' }, 'Čti dialog nahlas, dokud ho nezvládneš zpaměti. Ve scénce si vyber roli: aplikace řekne repliky druhých a ty odpovídáš.'));
+    h('p', { class: 'muted', style: 'font-size:var(--fs-s)' }, 'Čti dialog nahlas, dokud ho nezvládneš zpaměti. Ve scénce si vyber roli: aplikace řekne repliky druhých a ty odpovídáš. Pod každou větou je rozbor: z jakých slov se skládá a jak je myšlená.'));
   return wrap;
+}
+
+// Tlačítko „Rozbor věty“ s rozbalovacím panelem.
+function explainToggle(ex, open) {
+  const panel = explainPanel(ex);
+  panel.hidden = !open;
+  const btn = h('button', { class: 'explain-btn', type: 'button', 'aria-expanded': String(!!open) }, 'Rozbor věty');
+  btn.addEventListener('click', () => {
+    const on = btn.getAttribute('aria-expanded') !== 'true';
+    btn.setAttribute('aria-expanded', String(on));
+    panel.hidden = !on;
+  });
+  return h('div', null, btn, panel);
+}
+
+function explainPanel(ex) {
+  const words = ex.words.map((w) => {
+    const sayable = hasHan(w.zh);
+    return h(sayable ? 'button' : 'span', {
+      class: `word${w.isNew ? ' is-new' : ''}`,
+      type: sayable ? 'button' : null,
+      title: sayable ? 'Přehrát' : null,
+      onclick: sayable ? () => Speech.speak(w.zh) : null,
+    },
+    w.isNew ? h('span', { class: 'badge-new' }, 'nové') : null,
+    h('span', { class: 'zh' }, w.zh),
+    pyEl(w.py),
+    h('span', { class: 'wcz' }, w.cz));
+  });
+  return h('div', { class: 'explain' },
+    h('div', { class: 'words', role: 'list', 'aria-label': 'Slova ve větě' }, words),
+    h('p', { class: 'lit' }, h('b', null, 'Doslova: '), ex.lit),
+    makeSayable(h('p', { class: 'note' }, ex.note)));
 }
 
 // ---------- Slovíčka ----------
@@ -181,7 +222,15 @@ function renderVocab(lesson) {
     'Zakrýt význam (klepnutím ho odkryješ)');
   const extras = (arr) => arr.map((x) => h('section', { class: 'stack' }, h('h3', { class: 'section-title' }, x.title), renderBlocks(x.blocks)));
   const words = COURSE.vocab.filter((v) => v.l === lesson.n);
+  const newChars = h('section', { class: 'sheet stack' },
+    h('div', { class: 'row', style: 'justify-content:space-between' },
+      h('h2', null, 'Nové znaky v této lekci'),
+      h('span', { class: 'muted' }, plural(lesson.newChars.length, 'znak', 'znaky', 'znaků'))),
+    h('p', { class: 'muted', style: 'font-size:var(--fs-s)' }, 'Tyhle znaky se v kurzu objevují poprvé. Klepni na znak a uvidíš, jak se píše.'),
+    h('div', { class: 'practice-chars' }, lesson.newChars.map((c, i) =>
+      h('button', { class: 'tzg', type: 'button', 'aria-label': `Znak ${c}`, onclick: () => Writer.open(lesson.newChars, i) }, c))));
   return h('div', { class: 'stack-l' },
+    newChars,
     extras(s.before),
     h('section', { class: 'stack' },
       stepTitle('Slovíčka', h('span', { class: 'muted' }, plural(words.length, 'slovo', 'slova', 'slov'))),

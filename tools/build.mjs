@@ -11,6 +11,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildCourse, splitVocab } from './parse-md.mjs';
 import { lessons as lessonMeta, exercises, extraPinyin } from '../content/interaktivni.mjs';
+import rozbor from '../content/rozbor.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(root, p), 'utf8');
@@ -52,6 +53,32 @@ export function assembleCourse() {
     }
     Object.assign(lesson, lessonMeta[lesson.n]);
     lesson.exercises = exercises[lesson.n] || null;
+  }
+
+  // Nové znaky lekce: ty, které se ve slovníčcích objevují poprvé.
+  const seenChars = new Set();
+  for (const lesson of course.lessons) {
+    const words = vocab.filter((v) => v.l === lesson.n);
+    lesson.newChars = [];
+    for (const v of words) {
+      for (const c of v.zh.match(/\p{Script=Han}/gu) || []) {
+        if (!seenChars.has(c)) { seenChars.add(c); lesson.newChars.push(c); }
+      }
+    }
+    // Rozbor vět dialogu; „nové“ = slovo ze slovníčku této lekce.
+    const lessonWords = new Set(words.map((v) => v.zh.replace(/…/g, '')));
+    for (const line of lesson.steps.dialog.lines) {
+      const r = line.zh && rozbor[line.zh];
+      if (!r) continue;
+      line.ex = {
+        words: r.w.map((s) => {
+          const [zh, py, cz] = s.split('|');
+          return { zh, py, cz, isNew: lessonWords.has(zh) };
+        }),
+        lit: r.lit,
+        note: r.note,
+      };
+    }
   }
   course.vocab = vocab;
   course.pinyin = pinyin;
