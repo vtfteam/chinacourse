@@ -27,7 +27,7 @@ Osm lekcí tě provede od pozdravů po povídaní o koníčcích. Každá lekce 
 | Tón | Značka | Jak zní | Příklad |
 | --- | --- | --- | --- |
 | 1. | mā | vysoko a rovně, jako když zpíváš dlouhé „aaa“ | 妈 mā (máma) |
-| 2. | má | stoupá, jako uděvené „Co?“ | 麻 má (konopí) |
+| 2. | má | stoupá, jako udivené „Co?“ | 麻 má (konopí) |
 | 3. | mǎ | nízko, klesne až ke dnu, jako pochybovačné „Hmm“ | 马 mǎ (kůň) |
 | 4. | mà | ostrý pád dolů, jako rozkaz „Dost!“ | 骂 mà (nadávat) |
 | neutrální | ma | krátce a lehce, bez důrazu | 吗 ma (otázka) |
@@ -67,8 +67,8 @@ Petr se na kurzu seznámí s Wang Mingem.
 | Petr | 你好！ | Nǐ hǎo! | Ahoj! |
 | Wang | 你好！你叫什么名字？ | Nǐ hǎo! Nǐ jiào shénme míngzi? | Ahoj! Jak se jmenuješ? |
 | Petr | 我叫 Petr。你呢？ | Wǒ jiào Petr. Nǐ ne? | Jmenuju se Petr. A ty? |
-| Wang | 我叫王明。认识你很高兴。 | Wǒ jiào Wáng Míng. Rènshi nǐ hěn gāoxiàng. | Jmenuju se Wang Ming. Rád tě poznávám. |
-| Petr | 我也很高兴。你好吗？ | Wǒ yě hěn gāoxiàng. Nǐ hǎo ma? | Já taky. Máš se dobře? |
+| Wang | 我叫王明。认识你很高兴。 | Wǒ jiào Wáng Míng. Rènshi nǐ hěn gāoxìng. | Jmenuju se Wang Ming. Rád tě poznávám. |
+| Petr | 我也很高兴。你好吗？ | Wǒ yě hěn gāoxìng. Nǐ hǎo ma? | Já taky. Máš se dobře? |
 | Wang | 我很好，谢谢。你呢？ | Wǒ hěn hǎo, xièxie. Nǐ ne? | Mám se dobře, díky. A ty? |
 | Petr | 我也很好。 | Wǒ yě hěn hǎo. | Já se mám taky dobře. |
 | Wang | 再见！ | Zàijiàn! | Na shledanou! |
@@ -86,7 +86,7 @@ Petr se na kurzu seznámí s Wang Mingem.
 | 什么 | shénme | co, jaký |
 | 名字 | míngzi | jméno |
 | 很 | hěn | velmi (často jen spojka, viz gramatika) |
-| 高兴 | gāoxiàng | rád, vešelý |
+| 高兴 | gāoxìng | rád, veselý |
 | 认识 | rènshi | znát (člověka), poznat |
 | 也 | yě | také |
 | 吗 | ma | otázková částice |
@@ -503,7 +503,7 @@ Petr a Wang Ming přicházejí do restaurace.
 | Číšník | 你好！几位？ | Nǐ hǎo! Jǐ wèi? | Dobrý den! Kolik vás bude? |
 | Petr | 两位。 | Liǎng wèi. | Dva. |
 | Číšník | 这是菜单。你们想吃什么？ | Zhè shì càidān. Nǐmen xiǎng chī shénme? | Tady je jídelní lístek. Co si dáte? |
-| Petr | 我要一碗牛肉面，还要二十个饺子。 | Wǒ yào yì wǎn niúzhòu miàn, hái yào èrshí ge jiǎozi. | Dám si misku hovězích nudlí a ještě dvacet knedlíčků. |
+| Petr | 我要一碗牛肉面，还要二十个饺子。 | Wǒ yào yì wǎn niúròu miàn, hái yào èrshí ge jiǎozi. | Dám si misku hovězích nudlí a ještě dvacet knedlíčků. |
 | Wang | 我要一个麻婆豆腐和一碗米饭。 | Wǒ yào yí ge mápó dòufu hé yì wǎn mǐfàn. | Já si dám mapo tofu a misku rýže. |
 | Číšník | 你们喝什么？茶还是啤酒？ | Nǐmen hē shénme? Chá háishì píjiǔ? | A k pití? Čaj, nebo pivo? |
 | Petr | 我要一杯茶。 | Wǒ yào yì bēi chá. | Dám si šálek čaje. |
@@ -528,8 +528,8 @@ Petr a Wang Ming přicházejí do restaurace.
 | 吃 | chī | jíst |
 | 米饭 | mǐfàn | vařená rýže |
 | 面 / 面条 | miàn / miàntiáo | nudle |
-| 牛肉 | niúzhòu | hovězí |
-| 饺子 | jiǎozi | plěněné knedlíčky |
+| 牛肉 | niúròu | hovězí |
+| 饺子 | jiǎozi | plněné knedlíčky |
 | 茶 | chá | čaj |
 | 水 | shuǐ | voda |
 | 啤酒 | píjiǔ | pivo |
@@ -675,14 +675,14 @@ Po téhle lekci se zeptáš na cenu, usmlouváš slevu, vybereš barvu a velikos
 
 | Znak | Díly | Jak si ho zapamatovat |
 | --- | --- | --- |
-| 贵 guì | nahoře 中 + dole 贝 škeblí | škeblí byly ve staré Číně peníze; hodně peněz = drahé |
+| 贵 guì | nahoře 中 + dole 贝 škeble | škeble byly ve staré Číně peníze; hodně peněz = drahé |
 | 钱 qián | 钅 kov + 戋 | kovové mince = peníze |
 | 买 mǎi | 买 | koupit |
 | 卖 mài | 十 + 买 | „koupit“ s něčím navíc nahoře = prodat (se ziskem) |
 | 红 hóng | 纟 hedvábí + 工 gōng | barvené hedvábí = červená |
 | 衣 yī | obrázek oblečení s límcem | oblečení |
 
-**Nové radikály: 贝 (škeblí = peníze), 钅 (kov), 纟 (hedvábí, textil, barvy).** Škeblí najdeš ve znacích o obchodu: 贵 (drahý), 货 huò (zboží), 购 gòu (nakupovat).
+**Nové radikály: 贝 (škeble = peníze), 钅 (kov), 纟 (hedvábí, textil, barvy).** Škebli najdeš ve znacích o obchodu: 贵 (drahý), 货 huò (zboží), 购 gòu (nakupovat).
 
 ### Výslovnost: dvojslabičné kombinace tónů
 
@@ -690,10 +690,10 @@ Tóny se nejlépe učí v párech, protože tak je pak říkáš. Každý pár s
 
 | 1. slabika ↓ / 2. slabika → | 1. tón | 2. tón | 3. tón | 4. tón |
 | --- | --- | --- | --- | --- |
-| 1. tón | 咖啡 kāfēi | 中文 Zhōngwén | 喝水 hē shuǐ | 高兴 gāoxiàng |
+| 1. tón | 咖啡 kāfēi | 中文 Zhōngwén | 喝水 hē shuǐ | 高兴 gāoxìng |
 | 2. tón | 明天 míngtiān | 人民 rénmín | 没有 méiyǒu | 颜色 yánsè |
 | 3. tón | 老师 lǎoshī | 美元 Měiyuán | 你好 nǐ hǎo (→ ní hǎo) | 买菜 mǎi cài |
-| 4. tón | 上班 shàngbān | 饭馆 fànguǎn | 大小 dàxiǎo | 再见 zàijiàn |
+| 4. tón | 上班 shàngbān | 四十 sìshí | 大小 dàxiǎo | 再见 zàijiàn |
 
 Tip: projdi tabulku každý den nahlas, dokud melodii neuslyšíš v hlavě dřív, než ji vyslovíš. Pak už si tóny nových slov budeš pamatovat jako melodii, ne jako čísla.
 
@@ -732,7 +732,7 @@ Po téhle lekci se zeptáš na cestu, porozumíš jednoduchému popisu a řekne�
 | Petr | 离这儿远吗？ | Lí zhèr yuǎn ma? | Je to odsud daleko? |
 | Kolemjdoucí | 不远，走路五分钟。 | Bù yuǎn, zǒulù wǔ fēnzhōng. | Není, pěšky pět minut. |
 | Petr | 怎么走？ | Zěnme zǒu? | Jak se tam dostanu? |
-| Kolemjdoucí | 你一直往前走，到红绿灯往左拐。银行就在左边。 | Nǐ yìzhí wǎng qián zǒu, dào hónglǜdēng wǎng zuǒ guǎi. Yínháng jiù zài zuǒbian. | Jěď pořád rovně, na semaforu doleva. Banka je hned vlevo. |
+| Kolemjdoucí | 你一直往前走，到红绿灯往左拐。银行就在左边。 | Nǐ yìzhí wǎng qián zǒu, dào hónglǜdēng wǎng zuǒ guǎi. Yínháng jiù zài zuǒbian. | Jeď pořád rovně, na semaforu doleva. Banka je hned vlevo. |
 | Petr | 附近有超市吗？ | Fùjìn yǒu chāoshì ma? | Je tady poblíž supermarket? |
 | Kolemjdoucí | 有，超市在地铁站对面。 | Yǒu, chāoshì zài dìtiězhàn duìmiàn. | Je, naproti stanici metra. |
 | Petr | 太好了，谢谢！ | Tài hǎo le, xièxie! | Super, díky! |
@@ -802,7 +802,7 @@ Po téhle lekci se zeptáš na cestu, porozumíš jednoduchému popisu a řekne�
 
 ### Výslovnost: severní 儿
 
-V Pekingu se ke slovům často přidává -r: 哪儿 nǎr, 这儿 zhèr, 一点儿 yìdiǎnr. 儿 se neprosazuje jako samostatná slabika, jen stáčíš jazyk dozadu na konci slova. Na jihu Číny a na Tchaj-wanu se říká bez něj: 哪里 nǎlǐ, 这里 zhèlǐ, 一点 yìdiǎn. Obě podoby jsou správně a rozumí jim všichni.
+V Pekingu se ke slovům často přidává -r: 哪儿 nǎr, 这儿 zhèr, 一点儿 yìdiǎnr. 儿 se nevyslovuje jako samostatná slabika, jen stáčíš jazyk dozadu na konci slova. Na jihu Číny a na Tchaj-wanu se říká bez něj: 哪里 nǎlǐ, 这里 zhèlǐ, 一点 yìdiǎn. Obě podoby jsou správně a rozumí jim všichni.
 
 ### Mluvení: řekni nahlas
 
@@ -862,7 +862,7 @@ Po téhle lekci povídáš o koníčcích, o tom, co jsi dělal minulý víkend,
 | 看电影 | kàn diànyǐng | dívat se na film |
 | 听音乐 | tīng yīnyuè | poslouchat hudbu |
 | 做饭 | zuò fàn | vařit |
-| 旅游 | lǜyóu | cestovat |
+| 旅游 | lǚyóu | cestovat |
 | 朋友 | péngyou | kamarád |
 | 跟…一起 | gēn…yìqǐ | spolu s… |
 | 上个 / 这个 / 下个 | shàng ge / zhège / xià ge | minulý / tento / příští |
@@ -994,7 +994,7 @@ Tyhle díly už poznáš. Když narazíš na neznámý znak, hledej nejdřív je
 | 饣 | jídlo | 饭 饺 馆 | 5 |
 | 氵 | voda | 酒 汤 没 洗 | 5 |
 | 艹 | rostlina | 茶 菜 | 5 |
-| 贝 | škeblí, peníze | 贵 | 6 |
+| 贝 | škeble, peníze | 贵 | 6 |
 | 钅 | kov | 钱 铁 银 | 6, 7 |
 | 纟 | hedvábí | 红 绿 | 6, 7 |
 | 辶 | chůze, pohyb | 这 还 远 近 | 7 |
