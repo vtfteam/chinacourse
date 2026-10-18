@@ -484,9 +484,70 @@ td .hz-say, td .zh { font-size: 1.15em; }
 .who[data-r="0"] { color: var(--grid); }
 .who[data-r="1"] { color: var(--seal); }
 .line .zh { font-size: 1.5rem; line-height: 1.45; }
-.line .py { font-size: var(--fs-m); margin-top: 2px; }
-.line .cz { font-size: var(--fs-s); color: var(--ink-soft); margin-top: 2px; }
-.hide-py .line .py, .hide-cz .line .cz { display: none; }
+.line .line-py { font-size: var(--fs-m); margin-top: 2px; }
+.line .line-cz { font-size: var(--fs-s); color: var(--ink-soft); margin-top: 2px; }
+.hide-py .line-py, .hide-cz .line-cz { display: none; }
+
+/* Rozbor věty */
+.explain-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 6px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--grid);
+  font-weight: 700;
+  font-size: var(--fs-s);
+  cursor: pointer;
+}
+.explain-btn::after {
+  content: "";
+  width: 6px; height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.15s;
+}
+.explain-btn[aria-expanded="true"]::after { transform: translateY(1px) rotate(-135deg); }
+.explain {
+  margin-top: 8px;
+  padding: 14px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.words { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px; }
+.word {
+  position: relative;
+  display: inline-flex; flex-direction: column; align-items: center; gap: 1px;
+  min-width: 54px; max-width: 12em;
+  padding: 6px 10px 7px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--sheet-2);
+  color: inherit;
+  text-align: center;
+  line-height: 1.2;
+}
+button.word { cursor: pointer; }
+button.word:hover { border-color: var(--grid); }
+.line .word .zh { font-size: 1.3rem; line-height: 1.3; }
+.word .py { font-size: 12px; }
+.word .wcz { font-size: 12px; color: var(--ink-soft); }
+.word.is-new { border-color: color-mix(in srgb, var(--seal) 55%, var(--rule)); }
+.badge-new {
+  position: absolute; top: -8px; right: -6px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--seal);
+  color: var(--seal-ink);
+  font-size: 9.5px; font-weight: 700; line-height: 15px;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.explain .lit, .explain .note { font-size: var(--fs-s); }
+.line .explain .note .zh { font-size: 1.15em; line-height: inherit; }
+.explain .note { color: var(--ink-soft); }
 .stage { text-align: center; color: var(--ink-soft); font-size: var(--fs-s); padding: 6px; }
 .line.mine .mine-prompt { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
 .line.mine .mine-prompt .cz { font-size: var(--fs-m); color: var(--ink); }

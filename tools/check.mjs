@@ -2,11 +2,14 @@
 //   node tools/check.mjs
 
 import { assembleCourse, strokeData } from './build.mjs';
+import rozbor from '../content/rozbor.mjs';
 
 const course = assembleCourse();
 const problems = [];
 const warn = [];
 const han = (s) => (s.match(/[\p{Script=Han}〇]/gu) || []).join('');
+const pyNorm = (s) => s.normalize('NFC').toLowerCase().replace(/[^\p{L}]/gu, '');
+const usedRozbor = new Set();
 
 for (const l of course.lessons) {
   const s = l.steps;
@@ -16,6 +19,19 @@ for (const l of course.lessons) {
   if (s.dialog && !s.dialog.lines.length) problems.push(`Lekce ${l.n}: dialog nemá žádné repliky`);
   if (s.vocab && !s.vocab.entries.length) problems.push(`Lekce ${l.n}: prázdný slovníček`);
   if (!l.key) problems.push(`Lekce ${l.n}: chybí klíčové slovo v content/interaktivni.mjs`);
+
+  // Rozbor vět: slova musí dát dohromady celou repliku, znaky i pinyin.
+  for (const ln of s.dialog ? s.dialog.lines : []) {
+    if (!ln.zh) continue;
+    usedRozbor.add(ln.zh);
+    if (!ln.ex) { problems.push(`Lekce ${l.n}: replika „${ln.zh}“ nemá rozbor v content/rozbor.mjs`); continue; }
+    const zh = ln.ex.words.map((w) => w.zh).join('');
+    if (han(zh) !== han(ln.zh)) problems.push(`Lekce ${l.n}: rozbor „${ln.zh}“ má znaky ${han(zh)}`);
+    const py = ln.ex.words.map((w) => w.py).join('');
+    if (pyNorm(py) !== pyNorm(ln.py)) problems.push(`Lekce ${l.n}: rozbor „${ln.zh}“ má pinyin ${pyNorm(py)}, replika ${pyNorm(ln.py)}`);
+    for (const w of ln.ex.words) if (!w.zh || !w.py || !w.cz) problems.push(`Lekce ${l.n}: neúplné slovo „${w.zh}“ v rozboru „${ln.zh}“`);
+    if (!ln.ex.lit || !ln.ex.note) problems.push(`Lekce ${l.n}: rozbor „${ln.zh}“ nemá doslovný překlad nebo vysvětlení`);
+  }
   if (!l.exercises) warn.push(`Lekce ${l.n}: nemá interaktivní cvičení, zobrazí se text z učebnice`);
   if (!course.appendix.key[l.n]) warn.push(`Lekce ${l.n}: v příloze chybí klíč`);
 
@@ -52,6 +68,8 @@ function canBuild(target, tiles, reuse, used = new Set()) {
   return tiles.some((t, i) => t && target.startsWith(t) && (reuse || !used.has(i)) &&
     canBuild(target.slice(t.length), tiles, reuse, reuse ? used : new Set([...used, i])));
 }
+
+for (const key of Object.keys(rozbor)) if (!usedRozbor.has(key)) warn.push(`Rozbor „${key}“ nepatří k žádné replice`);
 
 const strokes = strokeData(course);
 const missing = [...new Set(course.vocab.flatMap((v) => [...han(v.zh)]))].filter((c) => !strokes[c]);
